@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Data binding example</title>
+  
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" 
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="ObsMap.js"></script>
+    <script src="my_model.min.js"></script>
+    
+</head>
+<body>
+  <div class="container">
+    <div class="mount-here">
+    <div class="form-group">
+      <label>Name:</label>
+      <input class="form-control" data-bind="personal.name"/>
+    </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input class="form-control" data-bind="personal.email" type="email"/>
+        </div>
+        
+        <div class="form-group">
+            <label>Email:</label>
+            <input class="form-control" data-bind="personal.email" type="email"/>
+        </div>
+        <div class="form-group">
+            <label>Country:</label>
+            <input class="form-control" data-bind="personal.country"/>
+        </div>
+        <div class="form-group">
+      <label>Name2:</label>
+      <input class="form-control" data-bind="personal.name"/>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" data-bind="rememberMe"/>
+      <label>Remember me</label>
+    </div>
+    
+    <h1>Welcome, <span  data-bind="personal.name"></span>!</h1>
+    <h1>Country, <span  data-bind="personal.country"></span>!</h1>
+    </div>
+    <pre id="model">
+    
+    </pre>
+    <button id="resetName-btn" class="btn btn-default">Reset Name</button>
+    <button id="remember-btn" class="btn btn-default">Remember</button>
+    <button id="forget-btn" class="btn btn-default">Forget</button>
+  </div>
+    
+<script>
+    const model = new Model(".mount-here", {
+        personal: {
+            name: "Jon Snow",
+            email: "jon.snow@westeros.co.uk",
+            country:"Ukraine"
+        },
+  rememberMe: true
+})
+
+window.__model = model
+
+const modelPre = document.getElementById('model')
+const render = () => {
+  modelPre.innerHTML = JSON.stringify(model.toObject(), null, " ");
+}
+model.subscribe(render);
+render()
+
+const $on = (selector, event, func) => document.querySelector(selector).addEventListener(event, func)
+const $click = (selector, func) => $on(selector, "click", func)
+
+$click("#resetName-btn", ()=>model.set('personal.name', 'Jon Snow'));
+$click("#remember-btn", () => model.set('rememberMe', true))
+$click("#forget-btn", () => model.set('rememberMe', false))
+
+</script>
+</body>
+</html>
